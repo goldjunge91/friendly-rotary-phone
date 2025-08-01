@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Programming Tutorial</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Interactive Programming Tutorial</h1>
+    </header>
+    <main>
+        <div id="tutorial-container">
+            <div id="lesson-content">
+                <h2>Welcome to the Tutorial!</h2>
+                <p>Complete the challenges to earn points and badges.</p>
+            </div>
+            <div id="code-editor-container">
+                <textarea id="code-editor" rows="10" cols="50"></textarea>
+                <button id="run-btn">Run Code</button>
+            </div>
+            <div id="output-container">
+                <h3>Output:</h3>
+                <pre id="output"></pre>
+            </div>
+        </div>
+        <div id="gamification-container">
+            <h3>Your Progress</h3>
+            <div id="score-container">
+                <span>Score: </span><span id="score">0</span>
+            </div>
+            <div id="achievements-container">
+                <h4>Achievements</h4>
+                <ul id="achievements-list"></ul>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Interactive Programming Tutorial</p>
+    </footer>
+    <script src="app.js"></script>
+    <script src="tests/test.js"></script>
+</body>
+</html>
