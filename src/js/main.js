@@ -1,12 +1,15 @@
 const { challenges } = require('./challenges.js');
-const { displayScore, loadChallenge, showSuccessMessage, showFailureMessage, displayAchievements } = require('./ui.js');
+const { displayScore, loadChallenge, showSuccessMessage, showFailureMessage, displayAchievements, updateVisualizer } = require('./ui.js');
 const { achievements, checkAchievements } = require('./achievements.js');
 const { saveProgress, loadProgress } = require('./storage.js');
+const { instrumentCode, _viz } = require('./visualizer.js');
 
 let score = 0;
 let currentChallengeIndex = 0;
 let editor;
 let completedChallenges = [];
+let visualizationStep = 0;
+let visualizationTrace = [];
 
 // Make the editor instance globally accessible.
 window.editor = null;
@@ -34,6 +37,8 @@ function resetScore() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const runBtn = document.getElementById('run-btn');
+    const visualizeBtn = document.getElementById('visualize-btn');
+    const visualizerContainer = document.getElementById('visualizer-container');
     const outputEl = document.getElementById('output');
     const codeEditorContainer = document.getElementById('code-editor');
     const nextBtn = document.getElementById('next-btn');
@@ -109,6 +114,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    if (visualizeBtn) {
+        visualizeBtn.addEventListener('click', () => {
+            const userCode = editor.getValue();
+            _viz.trace = []; // Clear previous trace
+            visualizationStep = 0;
+
+            try {
+                const instrumentedCode = instrumentCode(userCode);
+                eval(instrumentedCode);
+                visualizationTrace = _viz.trace;
+                console.log('Visualization trace:', visualizationTrace);
+                visualizerContainer.style.display = 'block';
+                updateVisualizer(visualizationTrace, visualizationStep, editor);
+            } catch (e) {
+                outputEl.textContent = `Error: ${e.message}`;
+                outputEl.style.color = 'red';
+            }
+        });
+    }
+
+    const visPlayPauseBtn = document.getElementById('vis-play-pause-btn');
+    visPlayPauseBtn.addEventListener('click', () => {
+        console.log('Play/Pause clicked');
+    });
+
+    const visStepBtn = document.getElementById('vis-step-btn');
+    visStepBtn.addEventListener('click', () => {
+        if (visualizationStep < visualizationTrace.length - 1) {
+            visualizationStep++;
+            updateVisualizer(visualizationTrace, visualizationStep, editor);
+        }
+    });
+
+    const visResetBtn = document.getElementById('vis-reset-btn');
+    visResetBtn.addEventListener('click', () => {
+        visualizationStep = 0;
+        updateVisualizer(visualizationTrace, visualizationStep, editor);
+    });
 
     nextBtn.addEventListener('click', () => {
         if (currentChallengeIndex < challenges.length - 1) {

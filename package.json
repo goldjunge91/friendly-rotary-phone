@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/goldjunge91/friendly-rotary-phone#readme",
   "dependencies": {
+    "acorn": "^8.11.3",
+    "acorn-walk": "^8.3.2",
     "chai": "^5.2.1",
     "express": "^5.1.0",
     "jsdom": "^26.1.0",

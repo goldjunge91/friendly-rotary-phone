@@ -42,8 +42,10 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(PORT, () => {
-    console.log(`listening on *:${PORT}`);
-});
+if (require.main === module) {
+    server.listen(PORT, () => {
+        console.log(`listening on *:${PORT}`);
+    });
+}
 
-module.exports = { app, server };
+module.exports = { app, server, io };

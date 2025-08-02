@@ -29,10 +29,42 @@ function displayAchievements(unlockedAchievements) {
     }
 }
 
+function displayCallStack(trace) {
+    const callStackEl = document.getElementById('call-stack');
+    // This is a placeholder. We will need to process the trace to build the call stack.
+    callStackEl.textContent = 'Call stack will be displayed here.';
+}
+
+function displayVariables(trace) {
+    const variablesEl = document.getElementById('scope-variables');
+    // This is a placeholder. We will need to process the trace to get variable values.
+    variablesEl.textContent = 'Variables will be displayed here.';
+}
+
+function highlightLine(node, editor) {
+    if (editor && node) {
+        const from = editor.posFromIndex(node.start);
+        const to = editor.posFromIndex(node.end);
+        editor.markText(from, to, { className: 'highlighted-code' });
+    }
+}
+
+function updateVisualizer(trace, step, editor) {
+    if (!trace || trace.length === 0) {
+        return;
+    }
+    const currentStep = trace[step];
+    displayCallStack(trace.slice(0, step + 1));
+    displayVariables(trace.slice(0, step + 1));
+    highlightLine(currentStep.node, editor);
+}
+
+
 module.exports = {
     displayScore,
     loadChallenge,
     showSuccessMessage,
     showFailureMessage,
     displayAchievements,
+    updateVisualizer,
 };
