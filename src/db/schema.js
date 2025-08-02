@@ -4,4 +4,4 @@ const users = sqliteTable('users', {
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
 });
-exports.users = users;
+module.exports = { users };

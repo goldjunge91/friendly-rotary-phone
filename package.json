@@ -23,6 +23,7 @@
   "homepage": "https://github.com/goldjunge91/friendly-rotary-phone#readme",
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.4",
+    "@dotenvx/dotenvx": "^1.48.4",
     "@hookform/resolvers": "^5.2.1",
     "@libsql/client": "^0.15.10",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -65,7 +66,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "embla-carousel-react": "^8.6.0",
     "eslint-plugin-drizzle": "^0.2.3",

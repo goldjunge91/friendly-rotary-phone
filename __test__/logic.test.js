@@ -1,9 +1,9 @@
 /** @vitest-environment jsdom */
 import { describe, it, expect } from 'vitest';
-import { greet, add, updateScore, getScore, resetScore } from '../js/main.js';
-import { sumArray } from '../js/array.js';
-import { getProperty } from '../js/object.js';
-import { reverseString } from '../js/string.js';
+import { greet, add, updateScore, getScore, resetScore } from '../src/js/main.js';
+import { sumArray } from '../src/js/array.js';
+import { getProperty } from '../src/js/object.js';
+import { reverseString } from '../src/js/string.js';
 
 describe('Core Logic', () => {
   it('greet function should return "Hello, World!"', () => {

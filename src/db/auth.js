@@ -1,16 +1,11 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
-import { users } from './schema';
-import argon2 from 'argon2';
-import { eq } from 'drizzle-orm';
+const db = require('./db');
+const { users } = require('./schema');
+const { eq } = require('drizzle-orm');
+const { hashPassword, verifyPassword } = require('../lib/hashing/password');
 
-const sqlite = new Database('auth.db');
-export const db = drizzle(sqlite);
-
-
-export async function registerUser(email, password) {
+async function registerUser(email, password) {
   try {
-    const hashed = await argon2.hash(password);
+    const hashed = await hashPassword(password);
     await db.insert(users).values({ email, password: hashed });
     return { success: true };
   } catch (err) {
@@ -21,10 +16,12 @@ export async function registerUser(email, password) {
   }
 }
 
-export async function loginUser(email, password) {
+async function loginUser(email, password) {
   const user = await db.select().from(users).where(eq(users.email, email)).get();
   if (!user) return { success: false, message: 'User not found' };
-  const match = await argon2.verify(user.password, password);
+  const match = await verifyPassword(user.password, password);
   if (!match) return { success: false, message: 'Invalid password' };
   return { success: true, user: { id: user.id, email: user.email } };
 }
+
+module.exports = { db, registerUser, loginUser };

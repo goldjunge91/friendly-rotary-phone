@@ -1,10 +1,10 @@
 import { expect, describe, it, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import io from 'socket.io-client';
-import http from 'http';
-import { app, server, io as serverIo } from '../server';
+import { server, io as serverIo } from '../src/server';
 
 describe('Socket.IO Server', () => {
     let clientSocket;
+    const sockets = [];
 
     beforeAll((done) => {
         server.listen(3001, () => {
@@ -15,19 +15,23 @@ describe('Socket.IO Server', () => {
     afterAll(() => {
         server.close();
         serverIo.close();
+        sockets.forEach(s => {
+            if (s && s.connected) s.disconnect();
+        });
     });
 
     beforeEach((done) => {
         clientSocket = io('http://localhost:3001', {
             reconnection: false,
         });
+        sockets.push(clientSocket);
         clientSocket.on('connect', () => {
             done();
         });
     });
 
     afterEach(() => {
-        if (clientSocket.connected) {
+        if (clientSocket && clientSocket.connected) {
             clientSocket.disconnect();
         }
     });
@@ -35,7 +39,7 @@ describe('Socket.IO Server', () => {
     it('should allow a user to create a room', (done) => {
         const roomId = 'test-room';
         clientSocket.emit('create-room', roomId);
-        clientSocket.on('room-created', (createdRoomId) => {
+        clientSocket.once('room-created', (createdRoomId) => {
             expect(createdRoomId).toBe(roomId);
             done();
         });
@@ -43,14 +47,16 @@ describe('Socket.IO Server', () => {
 
     it('should allow a user to join an existing room', (done) => {
         const roomId = 'test-room-2';
-        const teacherSocket = io('http://localhost:3001');
-        teacherSocket.on('connect', () => {
+        const teacherSocket = io('http://localhost:3001', { reconnection: false });
+        sockets.push(teacherSocket);
+        teacherSocket.once('connect', () => {
             teacherSocket.emit('create-room', roomId);
-            teacherSocket.on('room-created', () => {
-                const studentSocket = io('http://localhost:3001');
-                studentSocket.on('connect', () => {
+            teacherSocket.once('room-created', () => {
+                const studentSocket = io('http://localhost:3001', { reconnection: false });
+                sockets.push(studentSocket);
+                studentSocket.once('connect', () => {
                     studentSocket.emit('join-room', roomId);
-                    studentSocket.on('room-joined', (joinedRoomId) => {
+                    studentSocket.once('room-joined', (joinedRoomId) => {
                         expect(joinedRoomId).toBe(roomId);
                         teacherSocket.disconnect();
                         studentSocket.disconnect();
@@ -64,7 +70,7 @@ describe('Socket.IO Server', () => {
     it('should not allow a user to join a non-existent room', (done) => {
         const roomId = 'non-existent-room';
         clientSocket.emit('join-room', roomId);
-        clientSocket.on('join-error', (errorRoomId) => {
+        clientSocket.once('join-error', (errorRoomId) => {
             expect(errorRoomId).toBe(roomId);
             done();
         });
@@ -74,15 +80,17 @@ describe('Socket.IO Server', () => {
         const roomId = 'test-room-3';
         const code = 'console.log("hello")';
 
-        const teacherSocket = io('http://localhost:3001');
-        teacherSocket.on('connect', () => {
+        const teacherSocket = io('http://localhost:3001', { reconnection: false });
+        sockets.push(teacherSocket);
+        teacherSocket.once('connect', () => {
             teacherSocket.emit('create-room', roomId);
 
-            const studentSocket = io('http://localhost:3001');
-            studentSocket.on('connect', () => {
+            const studentSocket = io('http://localhost:3001', { reconnection: false });
+            sockets.push(studentSocket);
+            studentSocket.once('connect', () => {
                 studentSocket.emit('join-room', roomId);
-                studentSocket.on('room-joined', () => {
-                    studentSocket.on('code-update', (receivedCode) => {
+                studentSocket.once('room-joined', () => {
+                    studentSocket.once('code-update', (receivedCode) => {
                         expect(receivedCode).toBe(code);
                         teacherSocket.disconnect();
                         studentSocket.disconnect();

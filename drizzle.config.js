@@ -1,21 +1,11 @@
-// import 'dotenv/config';
-// import { defineConfig } from 'drizzle-kit';
-// export default defineConfig({
-//   out: './drizzle',
-//   schema: './db/schema.ts',
-//   dialect: 'sqlite',
-//   dbCredentials: {
-//     url: process.env.DATABASE_URL!,
-//   },
-// });
+import { defineConfig } from "drizzle-kit";
 
-require('dotenv').config();
-/** @type {import('drizzle-orm').DrizzleConfig} */
-module.exports = {
-  out: './drizzle',
-  schema: require('fs').existsSync('./db/schema.js') ? './db/schema.js' : './db/schema.ts',
-  dialect: 'sqlite',
+export default defineConfig({
+  dialect: "sqlite",
+  schema: "./src/db/schema.js",
+  out: "./src/db/drizzle",
   dbCredentials: {
-    url: process.env.DB_FILE_NAME,
+    url: "local.db",
   },
-};
+});
+

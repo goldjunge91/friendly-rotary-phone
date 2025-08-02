@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -38,14 +37,12 @@ const rooms = new Set();
 
 io.on('connection', (socket) => {
     console.log('a user connected');
-
     socket.on('create-room', (roomId) => {
         rooms.add(roomId);
         socket.join(roomId);
         socket.emit('room-created', roomId);
         console.log(`Room ${roomId} created`);
     });
-
     socket.on('join-room', (roomId) => {
         if (rooms.has(roomId)) {
             socket.join(roomId);
@@ -56,11 +53,9 @@ io.on('connection', (socket) => {
             console.log(`User failed to join room ${roomId}`);
         }
     });
-
     socket.on('code-change', (data) => {
         socket.to(data.roomId).emit('code-update', data.code);
     });
-
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });

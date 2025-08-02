@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
-import { useCollaboration } from '../hooks/useCollaboration';
+import { useCollaboration } from '../../src/hooks/useCollaboration';
 
 // Mock socket.io-client
 vi.mock('socket.io-client', () => {
