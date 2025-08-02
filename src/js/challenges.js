@@ -1,8 +1,8 @@
-const { sumArray } = require('./array.js');
-const { getProperty } = require('./object.js');
-const { reverseString } = require('./string.js');
+import { sumArray } from './array.js';
+import { getProperty } from './object.js';
+import { reverseString } from './string.js';
 
-module.exports.challenges = [
+export const challenges = [
     {
         id: 1,
         title: "Challenge 1: Is Positive?",

@@ -1,19 +1,20 @@
-const { expect } = require('chai');
-const io = require('socket.io-client');
-const http = require('http');
-const { app, server } = require('../server');
+import { expect, describe, it, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
+import io from 'socket.io-client';
+import http from 'http';
+import { app, server, io as serverIo } from '../server';
 
 describe('Socket.IO Server', () => {
     let clientSocket;
 
-    before((done) => {
+    beforeAll((done) => {
         server.listen(3001, () => {
             done();
         });
     });
 
-    after(() => {
+    afterAll(() => {
         server.close();
+        serverIo.close();
     });
 
     beforeEach((done) => {
@@ -35,7 +36,7 @@ describe('Socket.IO Server', () => {
         const roomId = 'test-room';
         clientSocket.emit('create-room', roomId);
         clientSocket.on('room-created', (createdRoomId) => {
-            expect(createdRoomId).to.equal(roomId);
+            expect(createdRoomId).toBe(roomId);
             done();
         });
     });
@@ -50,7 +51,7 @@ describe('Socket.IO Server', () => {
                 studentSocket.on('connect', () => {
                     studentSocket.emit('join-room', roomId);
                     studentSocket.on('room-joined', (joinedRoomId) => {
-                        expect(joinedRoomId).to.equal(roomId);
+                        expect(joinedRoomId).toBe(roomId);
                         teacherSocket.disconnect();
                         studentSocket.disconnect();
                         done();
@@ -64,7 +65,7 @@ describe('Socket.IO Server', () => {
         const roomId = 'non-existent-room';
         clientSocket.emit('join-room', roomId);
         clientSocket.on('join-error', (errorRoomId) => {
-            expect(errorRoomId).to.equal(roomId);
+            expect(errorRoomId).toBe(roomId);
             done();
         });
     });
@@ -82,7 +83,7 @@ describe('Socket.IO Server', () => {
                 studentSocket.emit('join-room', roomId);
                 studentSocket.on('room-joined', () => {
                     studentSocket.on('code-update', (receivedCode) => {
-                        expect(receivedCode).to.equal(code);
+                        expect(receivedCode).toBe(code);
                         teacherSocket.disconnect();
                         studentSocket.disconnect();
                         done();

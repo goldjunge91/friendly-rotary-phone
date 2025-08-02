@@ -1,4 +1,4 @@
-const achievements = [
+export const achievements = [
     {
         id: 1,
         name: "First Steps",
@@ -22,7 +22,7 @@ const achievements = [
     },
 ];
 
-function checkAchievements(completedChallenges) {
+export function checkAchievements(completedChallenges) {
     const newlyUnlocked = [];
     for (const achievement of achievements) {
         if (!achievement.unlocked && achievement.condition(completedChallenges)) {
@@ -32,8 +32,3 @@ function checkAchievements(completedChallenges) {
     }
     return newlyUnlocked;
 }
-
-module.exports = {
-    achievements,
-    checkAchievements,
-};

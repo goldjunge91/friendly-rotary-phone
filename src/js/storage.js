@@ -1,4 +1,4 @@
-function saveProgress(progress) {
+export function saveProgress(progress) {
     try {
         localStorage.setItem('progress', JSON.stringify(progress));
     } catch (e) {
@@ -6,7 +6,7 @@ function saveProgress(progress) {
     }
 }
 
-function loadProgress() {
+export function loadProgress() {
     try {
         const progress = localStorage.getItem('progress');
         return progress ? JSON.parse(progress) : null;
@@ -15,8 +15,3 @@ function loadProgress() {
         return null;
     }
 }
-
-module.exports = {
-    saveProgress,
-    loadProgress,
-};

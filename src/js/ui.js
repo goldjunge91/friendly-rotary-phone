@@ -1,25 +1,25 @@
-function displayScore(score) {
+export function displayScore(score) {
     const scoreEl = document.getElementById('score');
     scoreEl.textContent = score;
 }
 
-function loadChallenge(challenge, editor) {
+export function loadChallenge(challenge, editor) {
     const promptEl = document.getElementById('challenge-prompt');
     promptEl.innerHTML = `<h3>${challenge.title}</h3><p>${challenge.prompt}</p>`;
     editor.setValue(challenge.starterCode || '');
     document.getElementById('next-btn').disabled = true;
 }
 
-function showSuccessMessage(outputEl) {
+export function showSuccessMessage(outputEl) {
     outputEl.innerHTML += "\\n<strong style='color: green;'>Success!</strong> You've completed the challenge.";
     document.getElementById('next-btn').disabled = false;
 }
 
-function showFailureMessage(outputEl, hint) {
+export function showFailureMessage(outputEl, hint) {
     outputEl.innerHTML += `\\n<strong style='color: red;'>Validation Failed.</strong> ${hint || ''}`;
 }
 
-function displayAchievements(unlockedAchievements) {
+export function displayAchievements(unlockedAchievements) {
     const achievementsList = document.getElementById('achievements-list');
     achievementsList.innerHTML = '';
     for (const achievement of unlockedAchievements) {
@@ -29,19 +29,19 @@ function displayAchievements(unlockedAchievements) {
     }
 }
 
-function displayCallStack(trace) {
+export function displayCallStack(trace) {
     const callStackEl = document.getElementById('call-stack');
     // This is a placeholder. We will need to process the trace to build the call stack.
     callStackEl.textContent = 'Call stack will be displayed here.';
 }
 
-function displayVariables(trace) {
+export function displayVariables(trace) {
     const variablesEl = document.getElementById('scope-variables');
     // This is a placeholder. We will need to process the trace to get variable values.
     variablesEl.textContent = 'Variables will be displayed here.';
 }
 
-function highlightLine(node, editor) {
+export function highlightLine(node, editor) {
     if (editor && node) {
         const from = editor.posFromIndex(node.start);
         const to = editor.posFromIndex(node.end);
@@ -49,7 +49,7 @@ function highlightLine(node, editor) {
     }
 }
 
-function updateVisualizer(trace, step, editor) {
+export function updateVisualizer(trace, step, editor) {
     if (!trace || trace.length === 0) {
         return;
     }
@@ -58,13 +58,3 @@ function updateVisualizer(trace, step, editor) {
     displayVariables(trace.slice(0, step + 1));
     highlightLine(currentStep.node, editor);
 }
-
-
-module.exports = {
-    displayScore,
-    loadChallenge,
-    showSuccessMessage,
-    showFailureMessage,
-    displayAchievements,
-    updateVisualizer,
-};

@@ -1,4 +1,4 @@
-function getProperty(obj, key) {
+export function getProperty(obj, key) {
     if (typeof key !== 'string') {
         return undefined;
     }
@@ -12,7 +12,3 @@ function getProperty(obj, key) {
     }
     return current;
 }
-
-module.exports = {
-    getProperty,
-};

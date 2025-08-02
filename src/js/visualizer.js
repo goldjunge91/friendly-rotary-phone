@@ -1,9 +1,9 @@
-const acorn = require('acorn');
-const walk = require('acorn-walk');
+import * as acorn from 'acorn';
+import * as walk from 'acorn-walk';
 
 // This object will be available in the global scope during visualization.
 // It will collect the execution trace.
-const _viz = {
+export const _viz = {
     trace: [],
     step: function(node) {
         this.trace.push({
@@ -37,10 +37,7 @@ const _viz = {
     }
 };
 
-// Make _viz globally accessible for the instrumented code.
-window._viz = _viz;
-
-function instrumentCode(code) {
+export function instrumentCode(code) {
     let instrumentedCode = code;
     const ast = acorn.parse(code, { ecmaVersion: 2020 });
 
@@ -72,8 +69,3 @@ function instrumentCode(code) {
 
     return instrumentedCode;
 }
-
-module.exports = {
-    instrumentCode,
-    _viz
-};

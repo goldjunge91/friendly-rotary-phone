@@ -1,8 +1,8 @@
-const { challenges } = require('./challenges.js');
-const { displayScore, loadChallenge, showSuccessMessage, showFailureMessage, displayAchievements, updateVisualizer } = require('./ui.js');
-const { achievements, checkAchievements } = require('./achievements.js');
-const { saveProgress, loadProgress } = require('./storage.js');
-const { instrumentCode, _viz } = require('./visualizer.js');
+import { challenges } from './challenges.js';
+import { displayScore, loadChallenge, showSuccessMessage, showFailureMessage, displayAchievements, updateVisualizer } from './ui.js';
+import { achievements, checkAchievements } from './achievements.js';
+import { saveProgress, loadProgress } from './storage.js';
+import { instrumentCode, _viz } from './visualizer.js';
 
 let score = 0;
 let currentChallengeIndex = 0;
@@ -14,24 +14,24 @@ let visualizationTrace = [];
 // Make the editor instance globally accessible.
 window.editor = null;
 
-function greet() {
+export function greet() {
     return "Hello, World!";
 }
 
-function add(a, b) {
+export function add(a, b) {
     return a + b;
 }
 
-function updateScore(points) {
+export function updateScore(points) {
     score += points;
     displayScore(score);
 }
 
-function getScore() {
+export function getScore() {
     return score;
 }
 
-function resetScore() {
+export function resetScore() {
     score = 0;
 }
 
@@ -168,11 +168,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-module.exports = {
-    greet,
-    add,
-    updateScore,
-    getScore,
-    resetScore,
-};
