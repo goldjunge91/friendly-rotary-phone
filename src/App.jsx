@@ -1,15 +1,15 @@
+
 import React, { useState } from 'react';
 import Header from './components/Header';
 import TutorialView from './components/TutorialView';
 import PlaygroundView from './components/PlaygroundView';
 import { Button } from './components/ui/button';
 
-
 function App() {
-  const [view, setView] = useState('tutorial'); // 'tutorial' or 'playground'
+  const [view, setView] = useState('tutorial');
 
   return (
-    <div className="bg-dove-gray-950 text-dove-gray-100 font-body min-h-screen">
+    <div className="bg-gray-950 text-gray-100 min-h-screen font-body">
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-center mb-8">
@@ -20,11 +20,12 @@ function App() {
             Playground
           </Button>
         </div>
-
         {view === 'tutorial' ? <TutorialView /> : <PlaygroundView />}
       </main>
     </div>
   );
 }
+
+
 
 export default App;
