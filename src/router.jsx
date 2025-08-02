@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import TutorialView from './components/TutorialView';
 import PlaygroundView from './components/PlaygroundView';
+import LoginPage from './components/LoginPage';
+import RegisterPage from './components/RegisterPage';
 
 const Router = () => (
   <BrowserRouter>
@@ -11,10 +13,12 @@ const Router = () => (
           <Navbar />
       <main className="container mx-auto px-4 py-8">
         <Routes>
-                  <Route path="/" element={<Navigate to="/landing" />} />
+          <Route path="/" element={<Navigate to="/landing" />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/tutorial" element={<TutorialView />} />
           <Route path="/playground" element={<PlaygroundView />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </main>
     </div>
