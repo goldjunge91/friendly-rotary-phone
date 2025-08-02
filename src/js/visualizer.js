@@ -39,26 +39,74 @@ export const _viz = {
 
 export function instrumentCode(code) {
     let instrumentedCode = code;
-    const ast = acorn.parse(code, { ecmaVersion: 2020 });
-
+    // Parse with locations
+    const ast = acorn.parse(code, { ecmaVersion: 2020, locations: true });
     const insertions = [];
 
+    // Helper to instrument all statement nodes
+    function instrumentStatements(body) {
+        if (!Array.isArray(body)) return;
+        for (const node of body) {
+            // Only instrument actual statements
+            if (node.type.endsWith('Statement')) {
+                // Add line number to the node for trace
+                const nodeWithLine = { ...node, line: node.loc?.start?.line };
+                insertions.push({
+                    pos: node.start,
+                    text: `_viz.step(${JSON.stringify(nodeWithLine)});`
+                });
+            }
+            // Recursively instrument blocks (e.g., inside if, loops)
+            if (node.body) {
+                if (Array.isArray(node.body)) {
+                    instrumentStatements(node.body);
+                } else if (node.body.body) {
+                    instrumentStatements(node.body.body);
+                }
+            }
+            // Instrument alternate blocks (else)
+            if (node.alternate) {
+                if (Array.isArray(node.alternate)) {
+                    instrumentStatements(node.alternate);
+                } else if (node.alternate.body) {
+                    instrumentStatements(node.alternate.body);
+                }
+            }
+        }
+    }
+
     walk.simple(ast, {
-        ExpressionStatement(node) {
-            insertions.push({
-                pos: node.start,
-                text: `_viz.step(${JSON.stringify(node)});`
-            });
+        Program(node) {
+            instrumentStatements(node.body);
         },
         FunctionDeclaration(node) {
+            const nodeWithLine = { ...node, line: node.loc?.start?.line };
             insertions.push({
                 pos: node.body.start + 1,
-                text: `_viz.enterFunction(${JSON.stringify(node)});`
+                text: `_viz.enterFunction(${JSON.stringify(nodeWithLine)});`
             });
             insertions.push({
-                pos: node.body.end -1,
-                text: `_viz.leaveFunction(${JSON.stringify(node)});`
+                pos: node.body.end - 1,
+                text: `_viz.leaveFunction(${JSON.stringify(nodeWithLine)});`
             });
+            instrumentStatements(node.body.body);
+        },
+        FunctionExpression(node) {
+            const nodeWithLine = { ...node, line: node.loc?.start?.line };
+            insertions.push({
+                pos: node.body.start + 1,
+                text: `_viz.enterFunction(${JSON.stringify(nodeWithLine)});`
+            });
+            insertions.push({
+                pos: node.body.end - 1,
+                text: `_viz.leaveFunction(${JSON.stringify(nodeWithLine)});`
+            });
+            instrumentStatements(node.body.body);
+        },
+        ArrowFunctionExpression(node) {
+            if (node.body && Array.isArray(node.body.body)) {
+                instrumentStatements(node.body.body);
+            }
         }
     });
 

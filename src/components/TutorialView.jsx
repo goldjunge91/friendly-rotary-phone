@@ -1,6 +1,7 @@
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { instrumentCode, _viz } from '../js/visualizer';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { useCollaboration } from '../hooks/useCollaboration';
@@ -29,6 +30,63 @@ const TutorialView = () => {
   const [currentLine, setCurrentLine] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
   const [showSessionModal, setShowSessionModal] = useState(false);
+
+  // Visual Debugger State
+  const [trace, setTrace] = useState([]);
+  const [step, setStep] = useState(0);
+  const [isVisualizerOpen, setVisualizerOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const playInterval = useRef(null);
+
+  // Visualize button handler
+  const handleVisualize = () => {
+    try {
+      _viz.trace = [];
+      const instrumented = instrumentCode(code);
+      // eslint-disable-next-line no-eval
+      eval(instrumented);
+      setTrace([..._viz.trace]);
+      setStep(0);
+      setVisualizerOpen(true);
+      setIsPlaying(false);
+    } catch (e) {
+      setOutput(`Visualization error: ${e.message}`);
+    }
+  };
+
+  // Step forward/backward
+  const handleStep = dir => {
+    setStep(prev => {
+      const next = dir === 'forward' ? prev + 1 : prev - 1;
+      if (next < 0 || next >= trace.length) return prev;
+      return next;
+    });
+  };
+
+  // Play/Pause logic
+  useEffect(() => {
+    if (isPlaying && trace.length > 0) {
+      playInterval.current = setInterval(() => {
+        setStep(prev => {
+          if (prev < trace.length - 1) {
+            return prev + 1;
+          } else {
+            setIsPlaying(false);
+            return prev;
+          }
+        });
+      }, 700);
+    } else {
+      clearInterval(playInterval.current);
+    }
+    return () => clearInterval(playInterval.current);
+  }, [isPlaying, trace]);
+
+  // Reset visualizer
+  const handleReset = () => {
+    setStep(0);
+    setIsPlaying(false);
+  };
 
   useEffect(() => {
     setCode(currentChallenge?.starterCode || '// Write your solution here');
@@ -166,6 +224,31 @@ const TutorialView = () => {
                 <pre style={{ width: '100%', textAlign: 'left', margin: 0 }}>{teacherCode}</pre>
               </div>
             )}
+            {/* Visualizer Panel */}
+            {isVisualizerOpen && (
+              <div className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-blue-900/60 shadow-xl border border-purple-500/20 text-purple-100">
+                <h3 className="text-xl font-bold mb-4">Visual Debugger</h3>
+                <div className="flex gap-4 mb-4">
+                  <button className="px-3 py-1 rounded bg-purple-700 text-white" onClick={() => handleStep('backward')} disabled={step === 0}>⏪ Step Back</button>
+                  <button className="px-3 py-1 rounded bg-purple-700 text-white" onClick={() => setIsPlaying(p => !p)}>{isPlaying ? '⏸️ Pause' : '▶️ Play'}</button>
+                  <button className="px-3 py-1 rounded bg-purple-700 text-white" onClick={() => handleStep('forward')} disabled={step >= trace.length - 1}>⏩ Step Forward</button>
+                  <button className="px-3 py-1 rounded bg-purple-700 text-white" onClick={handleReset}>🔄 Reset</button>
+                  <button className="px-3 py-1 rounded bg-gray-700 text-white" onClick={() => setVisualizerOpen(false)}>❌ Close</button>
+                </div>
+                <div className="mb-2">Current Step: {step + 1} / {trace.length}</div>
+                <div className="mb-2">Type: {trace[step]?.type || '-'}</div>
+                <div className="mb-2">Line: {trace[step]?.node?.start !== undefined ? trace[step].node.start : '-'}</div>
+                {/* TODO: Call stack and variables visualization */}
+                <div className="mt-4">
+                  <strong>Call Stack:</strong>
+                  <pre className="bg-gray-900 rounded p-2 text-white text-xs">{JSON.stringify(trace.slice(0, step + 1).map(t => t.type), null, 2)}</pre>
+                </div>
+                <div className="mt-4">
+                  <strong>Variables:</strong>
+                  <pre className="bg-gray-900 rounded p-2 text-white text-xs">(Variable visualization coming soon)</pre>
+                </div>
+              </div>
+            )}
           </div>
           {/* Run/Visualize Buttons and Navigation */}
           <div className="flex gap-4 mb-6 justify-end">
@@ -175,6 +258,13 @@ const TutorialView = () => {
               disabled={!canRun || isPaused}
             >
               <span className="inline-block align-middle mr-2">▶️</span> Run
+            </button>
+            <button
+              className={`bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-xl text-white font-bold shadow-lg hover:scale-105 transition-transform ${!canRun ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={handleVisualize}
+              disabled={!canRun || isPaused}
+            >
+              <span className="inline-block align-middle mr-2">👁️</span> Visualize
             </button>
             <button className="bg-gradient-to-r from-gray-700 to-blue-700 px-6 py-2 rounded-xl text-white font-bold shadow-lg hover:scale-105 transition-transform" onClick={handlePrev} disabled={currentChallengeIndex === 0}>
               <span className="inline-block align-middle mr-2">⬅️</span> Previous
