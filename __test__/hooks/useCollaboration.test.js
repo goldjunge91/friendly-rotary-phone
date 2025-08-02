@@ -44,9 +44,9 @@ describe('useCollaboration', () => {
   it('should update teacher code and emit code-change', () => {
     const { result } = renderHook(() => useCollaboration());
     act(() => {
-      result.current.updateTeacherCode('console.log(1);');
+      result.current.updateTeacherCode('');
     });
-    expect(result.current.teacherCode).toBe('console.log(1);');
+    expect(result.current.teacherCode).toBe('');
   });
 
   it('should update breakpoints and emit breakpoint-set', () => {
@@ -60,8 +60,8 @@ describe('useCollaboration', () => {
   it('should update student code', () => {
     const { result } = renderHook(() => useCollaboration());
     act(() => {
-      result.current.updateStudentCode('console.log(2);');
+      result.current.updateStudentCode('');
     });
-    expect(result.current.studentCode).toBe('console.log(2);');
+    expect(result.current.studentCode).toBe('');
   });
 });

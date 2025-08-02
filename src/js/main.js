@@ -125,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const instrumentedCode = instrumentCode(userCode);
                 eval(instrumentedCode);
                 visualizationTrace = _viz.trace;
-                console.log('Visualization trace:', visualizationTrace);
                 visualizerContainer.style.display = 'block';
                 updateVisualizer(visualizationTrace, visualizationStep, editor);
             } catch (e) {
@@ -137,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const visPlayPauseBtn = document.getElementById('vis-play-pause-btn');
     visPlayPauseBtn.addEventListener('click', () => {
-        console.log('Play/Pause clicked');
     });
 
     const visStepBtn = document.getElementById('vis-step-btn');

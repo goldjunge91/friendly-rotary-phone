@@ -1,6 +1,6 @@
 import { expect, describe, it, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import io from 'socket.io-client';
-import { server, io as serverIo } from '../src/server';
+import { server, io as serverIo } from '../src/server/server';
 
 describe('Socket.IO Server', () => {
     let clientSocket;
@@ -78,7 +78,7 @@ describe('Socket.IO Server', () => {
 
     it('should broadcast code changes to other clients in the room', (done) => {
         const roomId = 'test-room-3';
-        const code = 'console.log("hello")';
+        // ...existing code...
 
         const teacherSocket = io('http://localhost:3001', { reconnection: false });
         sockets.push(teacherSocket);

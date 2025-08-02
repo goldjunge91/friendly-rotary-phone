@@ -127,7 +127,7 @@ try {
     assert(loadedProgress.unlockedAchievementIds.length === 2, "unlockedAchievementIds should be loaded correctly");
 
 
-    console.log("All tests passed!");
+    // ...existing code...
 } catch (error) {
     console.error("Test failed:", error.message);
 }

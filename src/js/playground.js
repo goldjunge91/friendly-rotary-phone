@@ -32,10 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let capturedOutput = '';
         playgroundOutputEl.style.color = '';
 
-        const oldLog = console.log;
-        console.log = (...args) => {
-            capturedOutput += args.map(String).join(' ') + '\\n';
-        };
 
         try {
             eval(userCode);
@@ -44,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
             playgroundOutputEl.textContent = `Error: ${e.message}`;
             playgroundOutputEl.style.color = 'red';
         } finally {
-            console.log = oldLog;
         }
     });
 });

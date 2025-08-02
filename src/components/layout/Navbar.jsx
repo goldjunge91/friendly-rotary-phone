@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import AuthBar from '../AuthBar.jsx';
+import AuthBar from './AuthBar';
 
 
 
