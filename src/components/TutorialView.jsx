@@ -28,6 +28,7 @@ const TutorialView = () => {
   const [joinCode, setJoinCode] = useState('');
   const [currentLine, setCurrentLine] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [showSessionModal, setShowSessionModal] = useState(false);
 
   useEffect(() => {
     setCode(currentChallenge?.starterCode || '// Write your solution here');
@@ -51,24 +52,23 @@ const TutorialView = () => {
     }
   };
 
-  const canRun = role === 'teacher' || (role === 'student' && code === teacherCode);
+  // Allow running code even if not connected as teacher or student
+  const canRun = !role || role === 'teacher' || (role === 'student' && code === teacherCode);
 
   const runCode = () => {
-    let result = '';
     setIsPaused(false);
     try {
-      const lines = code.split('\n');
-      for (let i = 0; i < lines.length; i++) {
-        setCurrentLine(i + 1);
-        if (breakpoints.includes(i + 1)) {
-          setIsPaused(true);
-          setOutput(`Paused at breakpoint on line ${i + 1}`);
-          return;
+      // Run challenge validation function
+      if (currentChallenge && typeof currentChallenge.validation === 'function') {
+        const validationResult = currentChallenge.validation(code);
+        if (validationResult.success) {
+          setOutput('Success! Challenge passed.');
+        } else {
+          setOutput(`Validation failed: ${validationResult.hint || 'Try again.'}`);
         }
-        // eslint-disable-next-line no-eval
-        eval(lines[i]);
+      } else {
+        setOutput('No validation function for this challenge.');
       }
-      setOutput(result || 'Code executed without errors.');
     } catch (e) {
       setOutput(`Error: ${e.message}`);
     }
@@ -92,6 +92,35 @@ const TutorialView = () => {
 
   return (
     <React.Fragment>
+      {/* Modal for session controls */}
+      {showSessionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-gray-900 rounded-lg p-8 w-full max-w-md shadow-lg relative">
+            <button className="absolute top-2 right-2 text-gray-400 hover:text-white" onClick={() => setShowSessionModal(false)}>&times;</button>
+            <h3 className="text-lg font-semibold mb-4">Get Teacher Help</h3>
+            <div className="flex flex-col gap-2">
+              <div><strong>Role:</strong> {role || 'None'}</div>
+              <div><strong>Session Code:</strong> {roomId || '-'}</div>
+              <div><strong>Status:</strong> {connected ? 'Connected' : 'Disconnected'}</div>
+              {!role && (
+                <React.Fragment>
+                  <button className="bg-purple-600 px-4 py-2 rounded text-white mb-2" onClick={startSession}>Start as Teacher</button>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      className="bg-gray-700 text-white px-2 py-1 rounded"
+                      placeholder="Enter session code"
+                      value={joinCode}
+                      onChange={e => setJoinCode(e.target.value)}
+                    />
+                    <button className="bg-purple-600 px-4 py-2 rounded text-white" onClick={() => joinSession(joinCode)}>Join as Student</button>
+                  </div>
+                </React.Fragment>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Challenge Prompt & Navigation */}
         <section className="md:col-span-2 mb-4">
@@ -99,27 +128,14 @@ const TutorialView = () => {
             <h2 className="text-xl font-semibold mb-2">{currentChallenge?.title || 'Challenge'}</h2>
             <p className="text-gray-300">{currentChallenge?.prompt || 'No description.'}</p>
           </div>
-          {/* Session Controls & Info */}
-          <div className="mb-4 p-4 bg-gray-800 rounded-lg flex flex-col gap-2">
-            <div><strong>Role:</strong> {role || 'None'}</div>
-            <div><strong>Session Code:</strong> {roomId || '-'}</div>
-            <div><strong>Status:</strong> {connected ? 'Connected' : 'Disconnected'}</div>
-            {!role && (
-              <React.Fragment>
-                <button className="bg-purple-600 px-4 py-2 rounded text-white mb-2" onClick={startSession}>Start as Teacher</button>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    className="bg-gray-700 text-white px-2 py-1 rounded"
-                    placeholder="Enter session code"
-                    value={joinCode}
-                    onChange={e => setJoinCode(e.target.value)}
-                  />
-                  <button className="bg-purple-600 px-4 py-2 rounded text-white" onClick={() => joinSession(joinCode)}>Join as Student</button>
-                </div>
-              </React.Fragment>
-            )}
-          </div>
+          {/* Get Teacher Help Button */}
+          {!role && (
+            <div className="mb-4">
+              <button className="bg-blue-700 px-4 py-2 rounded text-white" onClick={() => setShowSessionModal(true)}>
+                Get Teacher Help
+              </button>
+            </div>
+          )}
           {/* Code Editor & Overlay */}
           <div className="relative mb-4 p-4 bg-gray-900 rounded-lg">
             <CodeMirror
