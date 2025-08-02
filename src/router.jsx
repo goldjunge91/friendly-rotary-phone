@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import LandingPage from './components/LandingPage';
-import TutorialView from './components/TutorialView';
-import PlaygroundView from './components/PlaygroundView';
-import LoginPage from './components/LoginPage';
-import RegisterPage from './components/RegisterPage';
+import Navbar from './components/layout/Navbar';
+import LandingPage from './pages/LandingPage';
+import TutorialView from './pages/TutorialView';
+import PlaygroundView from './pages/PlaygroundView';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 const Router = () => (
   <BrowserRouter>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar } from './ui/avatar.jsx';
+import { Avatar } from '../ui/avatar.jsx';
 
 const AuthBar = () => {
   const [user, setUser] = React.useState(null);

@@ -1,4 +1,4 @@
-import PlaygroundView from '@/components/PlaygroundView';
+import PlaygroundView from '@/pages/PlaygroundView';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
