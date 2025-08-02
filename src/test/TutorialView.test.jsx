@@ -5,6 +5,8 @@ describe('TutorialView', () => {
   it('renders the tutorial view with its main elements', () => {
     render(<TutorialView />);
     expect(screen.getByText('Tutorial View')).toBeInTheDocument();
-    expect(screen.getByTestId('code-editor-container')).toBeInTheDocument();
+    // Find the code editor container by class name
+    const editorContainer = document.querySelector('.code-editor-container');
+    expect(editorContainer).toBeInTheDocument();
   });
 });

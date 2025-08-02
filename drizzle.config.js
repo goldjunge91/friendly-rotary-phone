@@ -13,7 +13,7 @@ require('dotenv').config();
 /** @type {import('drizzle-orm').DrizzleConfig} */
 module.exports = {
   out: './drizzle',
-  schema: './db/schema.ts',
+  schema: require('fs').existsSync('./db/schema.js') ? './db/schema.js' : './db/schema.ts',
   dialect: 'sqlite',
   dbCredentials: {
     url: process.env.DB_FILE_NAME,

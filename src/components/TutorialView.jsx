@@ -150,6 +150,9 @@ const TutorialView = () => {
 
   return (
     <React.Fragment>
+      <div className="w-full text-center mb-8">
+        <h1 className="text-4xl font-extrabold text-blue-300 tracking-tight">Tutorial View</h1>
+      </div>
       {/* Modal for session controls */}
       {showSessionModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-black/70 to-blue-900/80 backdrop-blur-sm transition-all">
@@ -197,7 +200,7 @@ const TutorialView = () => {
             </div>
           )}
           {/* Code Editor & Overlay */}
-          <div className="relative mb-6 p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-blue-900/60 shadow-xl border border-blue-500/20 backdrop-blur-md">
+          <div className="relative mb-6 p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-blue-900/60 shadow-xl border border-blue-500/20 backdrop-blur-md code-editor-container">
             <CodeMirror
               value={code}
               height="200px"
