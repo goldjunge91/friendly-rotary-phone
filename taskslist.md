@@ -6,7 +6,6 @@ Define the Challenge: Create a simple first challenge. For example: "Write a fun
 
 Task 2: Integrate a Professional Code Editor Objective: Replace the basic
 
-
 Feature 1: Live Code-Along Mode
 Create a "teacher" mode that allows an instructor to guide one or more "students" through a challenge in real-time.
 

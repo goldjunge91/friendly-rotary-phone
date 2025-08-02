@@ -94,26 +94,28 @@ const TutorialView = () => {
     <React.Fragment>
       {/* Modal for session controls */}
       {showSessionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-gray-900 rounded-lg p-8 w-full max-w-md shadow-lg relative">
-            <button className="absolute top-2 right-2 text-gray-400 hover:text-white" onClick={() => setShowSessionModal(false)}>&times;</button>
-            <h3 className="text-lg font-semibold mb-4">Get Teacher Help</h3>
-            <div className="flex flex-col gap-2">
-              <div><strong>Role:</strong> {role || 'None'}</div>
-              <div><strong>Session Code:</strong> {roomId || '-'}</div>
-              <div><strong>Status:</strong> {connected ? 'Connected' : 'Disconnected'}</div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-black/70 to-blue-900/80 backdrop-blur-sm transition-all">
+          <div className="bg-gradient-to-br from-gray-900/80 to-blue-800/80 rounded-2xl p-8 w-full max-w-md shadow-2xl border border-blue-500/30 relative animate-fadeIn">
+            <button className="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl" onClick={() => setShowSessionModal(false)}>&times;</button>
+            <h3 className="text-2xl font-bold mb-4 text-blue-300 tracking-tight">Get Teacher Help</h3>
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4 justify-between text-sm text-blue-200">
+                <span><strong>Role:</strong> {role || 'None'}</span>
+                <span><strong>Session Code:</strong> {roomId || '-'}</span>
+                <span><strong>Status:</strong> {connected ? 'Connected' : 'Disconnected'}</span>
+              </div>
               {!role && (
                 <React.Fragment>
-                  <button className="bg-purple-600 px-4 py-2 rounded text-white mb-2" onClick={startSession}>Start as Teacher</button>
-                  <div className="flex gap-2">
+                  <button className="bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 rounded-lg text-white font-semibold shadow hover:scale-105 transition-transform mb-2" onClick={startSession}>Start as Teacher</button>
+                  <div className="flex gap-2 items-center">
                     <input
                       type="text"
-                      className="bg-gray-700 text-white px-2 py-1 rounded"
+                      className="bg-gray-800/80 text-white px-3 py-2 rounded-lg border border-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
                       placeholder="Enter session code"
                       value={joinCode}
                       onChange={e => setJoinCode(e.target.value)}
                     />
-                    <button className="bg-purple-600 px-4 py-2 rounded text-white" onClick={() => joinSession(joinCode)}>Join as Student</button>
+                    <button className="bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 rounded-lg text-white font-semibold shadow hover:scale-105 transition-transform" onClick={() => joinSession(joinCode)}>Join as Student</button>
                   </div>
                 </React.Fragment>
               )}
@@ -121,29 +123,30 @@ const TutorialView = () => {
           </div>
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-2 md:px-0">
         {/* Challenge Prompt & Navigation */}
         <section className="md:col-span-2 mb-4">
-          <div className="mb-4 p-4 bg-gray-800 rounded-lg">
-            <h2 className="text-xl font-semibold mb-2">{currentChallenge?.title || 'Challenge'}</h2>
-            <p className="text-gray-300">{currentChallenge?.prompt || 'No description.'}</p>
+          <div className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-blue-900/60 shadow-xl border border-blue-500/20 backdrop-blur-md">
+            <h2 className="text-3xl font-extrabold mb-2 text-blue-200 tracking-tight drop-shadow">{currentChallenge?.title || 'Challenge'}</h2>
+            <p className="text-lg text-blue-100 mb-2 font-medium">{currentChallenge?.prompt || 'No description.'}</p>
           </div>
           {/* Get Teacher Help Button */}
           {!role && (
-            <div className="mb-4">
-              <button className="bg-blue-700 px-4 py-2 rounded text-white" onClick={() => setShowSessionModal(true)}>
-                Get Teacher Help
+            <div className="mb-6 flex justify-end">
+              <button className="bg-gradient-to-r from-blue-700 to-purple-700 px-6 py-2 rounded-xl text-white font-bold shadow-lg hover:scale-105 transition-transform" onClick={() => setShowSessionModal(true)}>
+                <span className="inline-block align-middle mr-2">🧑‍🏫</span> Get Teacher Help
               </button>
             </div>
           )}
           {/* Code Editor & Overlay */}
-          <div className="relative mb-4 p-4 bg-gray-900 rounded-lg">
+          <div className="relative mb-6 p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-blue-900/60 shadow-xl border border-blue-500/20 backdrop-blur-md">
             <CodeMirror
               value={code}
-              height="160px"
+              height="200px"
               extensions={[javascript()]}
               onChange={handleCodeChange}
               theme="dark"
+              className="rounded-xl border border-blue-500/20 shadow-inner"
             />
             {/* Line numbers for breakpoints (demo) */}
             {role === 'teacher' && (
@@ -151,7 +154,7 @@ const TutorialView = () => {
                 {code.split('\n').map((_, i) => (
                   <button
                     key={i}
-                    className={`w-6 h-6 text-xs text-white bg-gray-700 rounded m-0.5 ${breakpoints.includes(i + 1) ? 'bg-red-600' : ''}`}
+                    className={`w-7 h-7 text-xs text-white bg-blue-700/80 rounded-full m-0.5 shadow-lg border border-blue-400/40 hover:bg-purple-600 transition-colors ${breakpoints.includes(i + 1) ? 'bg-red-600' : ''}`}
                     onClick={() => handleSetBreakpoint(i + 1)}
                   >{i + 1}</button>
                 ))}
@@ -159,44 +162,46 @@ const TutorialView = () => {
             )}
             {/* Student overlay: show teacher's code grayed out if not matched */}
             {role === 'student' && teacherCode && code !== teacherCode && (
-              <div className="absolute inset-0 pointer-events-none bg-gray-900 bg-opacity-60 flex items-center justify-center text-gray-400 font-mono p-2 whitespace-pre-wrap z-10">
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-gray-900/80 to-blue-900/60 bg-opacity-70 flex items-center justify-center text-blue-300 font-mono p-2 whitespace-pre-wrap z-10 rounded-xl border border-blue-500/20">
                 <pre style={{ width: '100%', textAlign: 'left', margin: 0 }}>{teacherCode}</pre>
               </div>
             )}
           </div>
           {/* Run/Visualize Buttons and Navigation */}
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-4 mb-6 justify-end">
             <button
-              className={`bg-blue-600 px-4 py-2 rounded text-white mb-4 ${!canRun ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2 rounded-xl text-white font-bold shadow-lg hover:scale-105 transition-transform ${!canRun ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={runCode}
               disabled={!canRun || isPaused}
             >
-              Run
+              <span className="inline-block align-middle mr-2">▶️</span> Run
             </button>
-            <button className="bg-gray-700 px-4 py-2 rounded text-white" onClick={handlePrev} disabled={currentChallengeIndex === 0}>
-              Previous
+            <button className="bg-gradient-to-r from-gray-700 to-blue-700 px-6 py-2 rounded-xl text-white font-bold shadow-lg hover:scale-105 transition-transform" onClick={handlePrev} disabled={currentChallengeIndex === 0}>
+              <span className="inline-block align-middle mr-2">⬅️</span> Previous
             </button>
-            <button className="bg-gray-700 px-4 py-2 rounded text-white" onClick={handleNext} disabled={currentChallengeIndex === challenges.length - 1}>
-              Next
+            <button className="bg-gradient-to-r from-gray-700 to-blue-700 px-6 py-2 rounded-xl text-white font-bold shadow-lg hover:scale-105 transition-transform" onClick={handleNext} disabled={currentChallengeIndex === challenges.length - 1}>
+              <span className="inline-block align-middle mr-2">➡️</span> Next
             </button>
           </div>
           {isPaused && (
-            <div className="p-4 bg-yellow-800 rounded-lg text-yellow-200 mb-2">Paused at breakpoint on line {currentLine}</div>
+            <div className="p-4 bg-yellow-800/80 rounded-xl text-yellow-200 mb-4 shadow-lg animate-pulse">Paused at breakpoint on line {currentLine}</div>
           )}
-          <div className="mb-4 p-4 bg-gray-800 rounded-lg text-gray-200 whitespace-pre-wrap min-h-[3rem]">{output}</div>
+          <div className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-gray-800/80 to-blue-800/60 shadow-xl border border-blue-500/20 text-blue-100 whitespace-pre-wrap min-h-[3rem] font-mono text-base">
+            {output}
+          </div>
         </section>
         {/* Achievements & Score */}
-        <aside className="md:col-span-1 mb-4">
-          <div className="mb-4 p-4 bg-gray-800 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Achievements</h3>
-            <ul className="list-disc pl-5 text-gray-300">
+        <aside className="md:col-span-1 mb-4 flex flex-col gap-6">
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-blue-900/60 shadow-xl border border-blue-500/20 backdrop-blur-md">
+            <h3 className="text-xl font-bold mb-4 text-blue-200 tracking-tight">Achievements</h3>
+            <ul className="list-disc pl-5 text-blue-100 text-base">
               <li>First Steps</li>
               <li>5 in a Row</li>
             </ul>
           </div>
-          <div className="p-4 bg-gray-900 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Score</h3>
-            <div className="text-2xl">0</div>
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-800/80 to-blue-800/60 shadow-xl border border-blue-500/20 backdrop-blur-md flex flex-col items-center">
+            <h3 className="text-xl font-bold mb-2 text-blue-200 tracking-tight">Score</h3>
+            <div className="text-4xl font-extrabold text-blue-300 drop-shadow">0</div>
           </div>
         </aside>
       </div>
@@ -205,4 +210,3 @@ const TutorialView = () => {
 };
 
 export default TutorialView;
-          {/* Achievements & Score */}

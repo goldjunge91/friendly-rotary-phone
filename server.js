@@ -14,6 +14,24 @@ const io = socketIo(server, {
 const PORT = process.env.VITE_SOCKET_SERVER_PORT || process.env.PORT || 4000;
 
 app.use(express.static(__dirname));
+app.use(express.json());
+
+// Auth API routes
+const { registerUser, loginUser } = require('./db/auth');
+
+app.post('/api/register', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ success: false, message: 'Missing fields' });
+  const result = await registerUser(email, password);
+  res.json(result);
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ success: false, message: 'Missing fields' });
+  const result = await loginUser(email, password);
+  res.json(result);
+});
 
 const rooms = new Set();
 
