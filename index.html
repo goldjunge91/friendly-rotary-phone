@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Programming Tutorial</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
     <header>
@@ -15,10 +15,14 @@
             <div id="lesson-content">
                 <h2>Welcome to the Tutorial!</h2>
                 <p>Complete the challenges to earn points and badges.</p>
+                <div id="challenge-prompt"></div>
             </div>
             <div id="code-editor-container">
-                <textarea id="code-editor" rows="10" cols="50"></textarea>
                 <button id="run-btn">Run Code</button>
+            </div>
+            <div id="navigation-container">
+                <button id="prev-btn">Previous Challenge</button>
+                <button id="next-btn" disabled>Next Challenge</button>
             </div>
             <div id="output-container">
                 <h3>Output:</h3>
@@ -40,7 +44,9 @@
         <p>&copy; 2024 Interactive Programming Tutorial</p>
         <div id="test-results"></div>
     </footer>
-    <script src="app.js"></script>
-    <script src="tests/test.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="src/js/main.js"></script>
+    <script src="src/js/test.js"></script>
 </body>
 </html>
