@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Programming Tutorial</title>
     <link rel="stylesheet" href="src/css/style.css">
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <header>
         <h1>Interactive Programming Tutorial</h1>
+        <div id="collaboration-container">
+            <input type="text" id="room-id-input" placeholder="Enter Room ID">
+            <button id="join-btn">Join Session</button>
+            <button id="start-btn">Start Session</button>
+        </div>
     </header>
     <main>
         <div id="tutorial-container">
@@ -46,6 +52,7 @@
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="src/js/collaboration.js"></script>
     <script src="src/js/main.js"></script>
     <script src="src/js/test.js"></script>
 </body>

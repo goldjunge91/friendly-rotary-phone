@@ -8,6 +8,9 @@ let currentChallengeIndex = 0;
 let editor;
 let completedChallenges = [];
 
+// Make the editor instance globally accessible.
+window.editor = null;
+
 function greet() {
     return "Hello, World!";
 }
@@ -50,11 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAchievements(achievements.filter(a => a.unlocked));
     }
 
-    editor = CodeMirror(codeEditorContainer, {
+    window.editor = CodeMirror(codeEditorContainer, {
         mode: 'javascript',
         theme: 'dracula',
         lineNumbers: true,
     });
+    editor = window.editor;
 
     loadChallenge(challenges[currentChallengeIndex], editor);
 
