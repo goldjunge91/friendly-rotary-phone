@@ -4,81 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Programming Tutorial</title>
-    <link rel="stylesheet" href="src/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind.config.js"></script>
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
 </head>
-<body>
-    <header>
-        <h1>Interactive Programming Tutorial</h1>
-        <nav>
-            <button id="tutorial-tab-btn" class="active">Tutorial</button>
-            <button id="playground-tab-btn">Playground</button>
-        </nav>
-        <div id="collaboration-container">
-            <input type="text" id="room-id-input" placeholder="Enter Room ID">
-            <button id="join-btn">Join Session</button>
-            <button id="start-btn">Start Session</button>
+<body class="bg-dove-gray-950 text-dove-gray-100 font-body">
+    <header class="bg-dove-gray-900 shadow-md">
+        <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+            <h1 class="text-3xl font-heading font-bold text-curious-blue-400">CodeCraft</h1>
+            <nav>
+                <button id="tutorial-tab-btn" class="px-4 py-2 rounded-md text-white bg-curious-blue-600 hover:bg-curious-blue-700 focus:outline-none focus:ring-2 focus:ring-curious-blue-500 active">Tutorial</button>
+                <button id="playground-tab-btn" class="ml-4 px-4 py-2 rounded-md text-white bg-dove-gray-700 hover:bg-dove-gray-600 focus:outline-none focus:ring-2 focus:ring-dove-gray-500">Playground</button>
+            </nav>
+            <div id="collaboration-container" class="flex items-center">
+                <input type="text" id="room-id-input" placeholder="Enter Room ID" class="px-4 py-2 rounded-md bg-dove-gray-800 text-white border border-dove-gray-700 focus:outline-none focus:ring-2 focus:ring-curious-blue-500">
+                <button id="join-btn" class="ml-2 px-4 py-2 rounded-md text-white bg-brandy-punch-600 hover:bg-brandy-punch-700 focus:outline-none focus:ring-2 focus:ring-brandy-punch-500">Join Session</button>
+                <button id="start-btn" class="ml-2 px-4 py-2 rounded-md text-white bg-brandy-punch-600 hover:bg-brandy-punch-700 focus:outline-none focus:ring-2 focus:ring-brandy-punch-500">Start Session</button>
+            </div>
         </div>
     </header>
-    <main>
+
+    <main class="container mx-auto px-4 py-8">
         <div id="tutorial-view">
-            <div id="tutorial-container">
-                <div id="lesson-content">
-                    <h2>Welcome to the Tutorial!</h2>
-                    <p>Complete the challenges to earn points and badges.</p>
-                    <div id="challenge-prompt"></div>
-                </div>
-                <div id="code-editor-container">
-                    <button id="run-btn">Run Code</button>
-                    <button id="visualize-btn">Visualize</button>
-                </div>
-                <div id="visualizer-container" style="display: none;">
-                    <h3>Visualizer</h3>
-                    <div id="visualizer-controls">
-                        <button id="vis-play-pause-btn">Play/Pause</button>
-                        <button id="vis-step-btn">Step</button>
-                        <button id="vis-reset-btn">Reset</button>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-dove-gray-900 p-6 rounded-lg shadow-lg">
+                    <div id="lesson-content" class="mb-6">
+                        <h2 class="text-2xl font-heading font-bold text-curious-blue-400 mb-4">Welcome to the Tutorial!</h2>
+                        <p class="text-dove-gray-300">Complete the challenges to earn points and badges.</p>
+                        <div id="challenge-prompt" class="mt-4 p-4 bg-dove-gray-800 rounded-md"></div>
                     </div>
-                    <h4>Call Stack</h4>
-                    <pre id="call-stack"></pre>
-                    <h4>Scope</h4>
-                    <pre id="scope-variables"></pre>
+
+                    <div id="code-editor-container" class="mb-6"></div>
+
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <button id="run-btn" class="px-6 py-2 rounded-md text-white bg-curious-blue-600 hover:bg-curious-blue-700 focus:outline-none focus:ring-2 focus:ring-curious-blue-500">Run Code</button>
+                            <button id="visualize-btn" class="ml-4 px-6 py-2 rounded-md text-white bg-brandy-punch-600 hover:bg-brandy-punch-700 focus:outline-none focus:ring-2 focus:ring-brandy-punch-500">Visualize</button>
+                        </div>
+                        <div id="navigation-container">
+                            <button id="prev-btn" class="px-4 py-2 rounded-md text-white bg-dove-gray-700 hover:bg-dove-gray-600 focus:outline-none focus:ring-2 focus:ring-dove-gray-500">Previous</button>
+                            <button id="next-btn" disabled class="ml-4 px-4 py-2 rounded-md text-white bg-dove-gray-700 hover:bg-dove-gray-600 focus:outline-none focus:ring-2 focus:ring-dove-gray-500 cursor-not-allowed">Next</button>
+                        </div>
+                    </div>
+
+                    <div id="visualizer-container" style="display: none;" class="bg-dove-gray-800 p-4 rounded-lg">
+                        <h3 class="text-xl font-heading font-bold text-curious-blue-400 mb-4">Visualizer</h3>
+                        <div id="visualizer-controls" class="flex items-center mb-4">
+                            <button id="vis-play-pause-btn" class="px-4 py-2 rounded-md text-white bg-curious-blue-600 hover:bg-curious-blue-700">Play/Pause</button>
+                            <button id="vis-step-btn" class="ml-2 px-4 py-2 rounded-md text-white bg-curious-blue-600 hover:bg-curious-blue-700">Step</button>
+                            <button id="vis-reset-btn" class="ml-2 px-4 py-2 rounded-md text-white bg-curious-blue-600 hover:bg-curious-blue-700">Reset</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-curious-blue-300">Call Stack</h4>
+                                <pre id="call-stack" class="bg-dove-gray-900 p-2 rounded-md h-40 overflow-auto"></pre>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-curious-blue-300">Scope</h4>
+                                <pre id="scope-variables" class="bg-dove-gray-900 p-2 rounded-md h-40 overflow-auto"></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="output-container" class="mt-6">
+                        <h3 class="text-xl font-heading font-bold text-curious-blue-400 mb-2">Output:</h3>
+                        <pre id="output" class="bg-dove-gray-800 p-4 rounded-md h-32 overflow-auto"></pre>
+                    </div>
                 </div>
-                <div id="navigation-container">
-                    <button id="prev-btn">Previous Challenge</button>
-                    <button id="next-btn" disabled>Next Challenge</button>
-                </div>
-                <div id="output-container">
-                    <h3>Output:</h3>
-                    <pre id="output"></pre>
-                </div>
-            </div>
-            <div id="gamification-container">
-                <h3>Your Progress</h3>
-                <div id="score-container">
-                    <span>Score: </span><span id="score">0</span>
-                </div>
-                <div id="achievements-container">
-                    <h4>Achievements</h4>
-                    <ul id="achievements-list"></ul>
+
+                <div id="gamification-container" class="bg-dove-gray-900 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-heading font-bold text-curious-blue-400 mb-4">Your Progress</h3>
+                    <div id="score-container" class="text-lg mb-6">
+                        <span>Score: </span><span id="score" class="font-bold text-brandy-punch-400">0</span>
+                    </div>
+                    <div id="achievements-container">
+                        <h4 class="text-xl font-heading font-bold text-curious-blue-400 mb-2">Achievements</h4>
+                        <ul id="achievements-list" class="space-y-2"></ul>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="playground-view" style="display: none;">
-            <h2>Playground</h2>
-            <p>Experiment with code freely.</p>
-            <div id="playground-editor-container"></div>
-            <button id="playground-run-btn">Run</button>
-            <div id="playground-output-container">
-                <h3>Output:</h3>
-                <pre id="playground-output"></pre>
+
+        <div id="playground-view" style="display: none;" class="bg-dove-gray-900 p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-heading font-bold text-curious-blue-400 mb-4">Playground</h2>
+            <p class="text-dove-gray-300 mb-4">Experiment with code freely.</p>
+            <div id="playground-editor-container" class="mb-4"></div>
+            <button id="playground-run-btn" class="px-6 py-2 rounded-md text-white bg-curious-blue-600 hover:bg-curious-blue-700 focus:outline-none focus:ring-2 focus:ring-curious-blue-500">Run</button>
+            <div id="playground-output-container" class="mt-6">
+                <h3 class="text-xl font-heading font-bold text-curious-blue-400 mb-2">Output:</h3>
+                <pre id="playground-output" class="bg-dove-gray-800 p-4 rounded-md h-48 overflow-auto"></pre>
             </div>
         </div>
     </main>
-    <footer>
-        <p>&copy; 2024 Interactive Programming Tutorial</p>
-        <div id="test-results"></div>
+
+    <footer class="bg-dove-gray-900 mt-12 py-6 text-center text-dove-gray-400">
+        <p>&copy; 2024 CodeCraft. All Rights Reserved.</p>
+        <div id="test-results" class="mt-4"></div>
     </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <script src="src/js/collaboration.js"></script>
