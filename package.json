@@ -4,9 +4,11 @@
   "scripts": {
     "test": "vitest",
     "build": "vite build",
-    "start": "node server.js",
-    "dev": "concurrently \"npm:start\" \"vite\"",
-    "preview": "vite preview"
+    "start": "vite",
+    "tutor:backend": "node server.js",
+    "dev": "vite",
+    "preview": "vite preview",
+    "run:both": "concurrently \"pnpm run tutor:backend\" \"pnpm run dev\""
   },
   "repository": {
     "type": "git",
