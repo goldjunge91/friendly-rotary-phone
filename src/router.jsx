@@ -1,0 +1,28 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/layout/Navbar';
+import LandingPage from './pages/LandingPage';
+import TutorialView from './pages/TutorialView';
+import PlaygroundView from './pages/PlaygroundView';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+
+const Router = () => (
+  <BrowserRouter>
+    <div className="bg-gray-950 text-gray-100 min-h-screen font-body">
+          <Navbar />
+      <main className="container mx-auto px-4 py-8">
+        <Routes>
+          <Route path="/" element={<Navigate to="/landing" />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/tutorial" element={<TutorialView />} />
+          <Route path="/playground" element={<PlaygroundView />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </main>
+    </div>
+  </BrowserRouter>
+);
+
+export default Router;
